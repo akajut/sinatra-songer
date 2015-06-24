@@ -37,7 +37,7 @@ end
 
 get '/about' do
 	@title = "All About This Website"
-	slim:about
+	slim :about
 end
 
 get '/contact' do
