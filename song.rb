@@ -32,7 +32,7 @@ get '/' do
 end
 
 get '/about' do
-	@title = "All About This Website"
+	@title = "All About This Sinatra Website"
 	slim :about
 end
 
