@@ -13,6 +13,12 @@ gem "dm-migrations"
 
 gem "thin"
 
+gem "sinatra-flash"
+
+gem "shotgun"
+
+gem "pony"
+
 gem "pg", :group => :production
 
 gem "dm-postgres-adapter", :group => :production

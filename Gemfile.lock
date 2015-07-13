@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.8)
-    daemons (1.2.2)
+    daemons (1.2.3)
     data_objects (0.10.16)
       addressable (~> 2.1)
     dm-core (1.2.1)
@@ -23,15 +23,24 @@ GEM
     do_sqlite3 (0.10.16)
       data_objects (= 0.10.16)
     eventmachine (1.0.7)
+    mail (2.6.3)
+      mime-types (>= 1.16, < 3)
+    mime-types (2.6.1)
     pg (0.18.2)
+    pony (1.11)
+      mail (>= 2.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
-    sass (3.4.14)
+    sass (3.4.16)
+    shotgun (0.9.1)
+      rack (>= 1.0)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
+    sinatra-flash (0.3.0)
+      sinatra (>= 1.0.0)
     slim (3.0.6)
       temple (~> 0.7.3)
       tilt (>= 1.3.3, < 2.1)
@@ -51,8 +60,11 @@ DEPENDENCIES
   dm-postgres-adapter
   dm-sqlite-adapter
   pg
+  pony
   sass
+  shotgun
   sinatra
+  sinatra-flash
   slim
   thin
 

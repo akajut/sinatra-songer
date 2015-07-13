@@ -1,4 +1,5 @@
 require './song'
+require 'pony'
 
 configure do
 	enable :sessions
@@ -8,11 +9,64 @@ end
 
 configure :development do
 	DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+
+	set :email_address => 'smtp.gmail.com',
+		:email_user_name => 'akajut'
+		:email_password => 'secret'
+		:email_domain => 'localhost.localdomain'
 end
 
 configure :production do
 	DataMapper.setup(:default, ENV['DATABASE_URL'])
+
+	set :email_address => 'smtp.sendgrid.net',
+		:email_user_name => ENV['SENDGRID_USERNAME']
+		:email_password => ENV['SENDGRID_PASSWORD']
+		:email_domain => 'heroku.com'
 end
+
+before do
+	set_title
+end
+
+helpers do
+	def css(*stylesheets)
+		stylesheets.map do |styleheet|
+			"<link href=\"/#{styleheet}.css\" media=\"screen, projection\" rel=\"stylesheet\" />"
+		end.join
+	end
+
+	def current?(path='/')
+		(request.path==path || request.path==path+'/') ? "current" :nil
+	end
+
+	def set_title
+		@title ||= "Songs By Sinatra"
+	end
+
+	def send_message
+		Pony.mail(
+				:from => params[:name] + "<" + params[:email] + ">",
+				:to => 'akajut@gmail.com',
+				:subject => params[:name] = " has contacted you",
+				:body => params[:message],
+				:port => '587',
+				:via => :smtp,
+				:via_options => {
+					:address				=> 'smtp.gmail.com',
+					:port					=> '587',
+					:enable_starttls_auto 	=> true,
+					:user_name				=> 'akajut',
+					:password				=> 'secret',
+					:authentication			=> :plain,
+					:domain					=> 'localhost.localdomain'
+				}
+			)
+	end
+end
+
+
+
 
 get '/login' do
 	slim :login
@@ -38,4 +92,10 @@ end
 
 get '/get/hello' do
 	"Hello #{session[:name]}"
+end
+
+post '/contact' do
+	send_message
+	flash[:notice] = "Thank your for your message. We'll be in touch soon."
+	redirect to('/')
 end

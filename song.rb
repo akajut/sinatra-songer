@@ -4,6 +4,8 @@ require 'sinatra'
 require 'slim'
 require 'sass'
 
+require 'sinatra/flash'
+
 #set :port, 3000
 
 class Song
@@ -21,6 +23,22 @@ end
 
 DataMapper.finalize
 
+module SongHelpers
+	def find_songs
+		@songs = Song.all
+	end
+
+	def find_song
+		Song.get(params[:id])
+	end
+
+	def create_song
+		@song = Song.create(params[:song])
+		#return Song.id
+	end
+end
+
+helpers SongHelpers
 
 
 
@@ -37,16 +55,19 @@ get '/about' do
 end
 
 get '/contact' do
-	@title = "How to Contact Us"
+	@title = "How to Contact Us || Songs by Sinatra"
 	slim :contact
 end
 
 post '/songs' do
-	song = Song.create(params[:song])
-	redirect to("/songs/#{song.id}")
+	if create_song
+		flash[:notice] = "Song successfully added"
+	end
+	redirect to("/songs/#{@song.id}")
 end
+
 get '/songs' do
-	@songs = Song.all
+	find_songs
 	slim :songs
 end
 
@@ -59,26 +80,29 @@ end
 get '/songs/:id' do
 	@title = "Sinatra Song:"
 	@name = "Jut"
-	@song = Song.get(params[:id])
+	@song = find_song
 	slim :show_song
 end
 
 get '/songs/:id/edit' do
 	halt(401, 'Not Autorized') unless session[:admin]
-	@song = Song.get(params[:id])
+	@song = find_song
 	slim :edit_song
 end
 
 put "/songs/:id" do
-	halt(401, 'Not Autorized') unless session[:admin]
-	song = Song.get(params[:id])
-	song.update(params[:song])
+	protected!
+	song = find_song
+	if song.update(params[:song])
+		flash[:notice] = "Song successfully updated"
+	end
 	redirect to("/songs/#{song.id}")
 end
 
 delete '/songs/:id' do
-	halt(401, 'Not Autorized') unless session[:admin]
-	Song.get(params[:id]).destroy
+	if find_song.destroy
+		flash[:notice] = "Song deleted"
+	end
 	redirect to('/songs')
 end
 
