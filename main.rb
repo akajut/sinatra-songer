@@ -1,5 +1,6 @@
 require './song'
 require 'pony'
+require './sinatra/auth'
 
 configure do
 	enable :sessions
