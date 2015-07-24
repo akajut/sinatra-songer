@@ -28,7 +28,7 @@ module Sinatra
 			app.post '/login' do
 				if params[:username] == settings.username && params[:password] == settings.password
 					session[:admin] = true
-					flash[:notice] = "You are now logged inas #{settings.username}"
+					flash[:notice] = "You are now logged in as #{settings.username}"
 					redirect to('/login')
 				end
 			end

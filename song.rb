@@ -3,10 +3,8 @@ require 'dm-migrations'
 require 'sinatra'
 require 'slim'
 require 'sass'
-
+require 'sinatra/reloader' if development?
 require 'sinatra/flash'
-
-#set :port, 3000
 
 class Song
 	include DataMapper::Resource

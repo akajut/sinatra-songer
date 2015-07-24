@@ -3,6 +3,8 @@ source "https://rubygems.org"
 
 gem "sinatra"
 
+gem "sinatra-contrib"
+
 gem "slim"
 
 gem "sass"
@@ -18,6 +20,10 @@ gem "sinatra-flash"
 gem "shotgun"
 
 gem "pony"
+
+gem "coffee-script"
+
+gem "therubyracer"
 
 gem "pg", :group => :production
 

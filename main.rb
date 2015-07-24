@@ -2,6 +2,10 @@ require './song'
 require 'pony'
 require './sinatra/auth'
 
+require 'v8'
+require 'coffee-script'
+
+
 configure do
 	enable :sessions
 	set :username, 'frank'
@@ -11,6 +15,9 @@ end
 configure :development do
 	DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
 
+  set :bind, '0.0.0.0'
+  #set :port, 9393
+  
 	set :email_address => 'smtp.gmail.com',
 		:email_user_name => 'akajut',
 		:email_password => 'secret',
@@ -66,6 +73,8 @@ helpers do
 	end
 end
 
+get('/styles.css'){ scss :styles }
+get('/javascripts/application.js'){ coffee :application }
 
 
 
