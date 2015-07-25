@@ -1,9 +1,13 @@
+require 'sinatra'
+require 'slim'
+require 'sass'
 require './song'
+require 'sinatra/flash'
 require 'pony'
 require './sinatra/auth'
-
 require 'v8'
 require 'coffee-script'
+require 'sinatra/reloader' if development?
 
 
 configure do
