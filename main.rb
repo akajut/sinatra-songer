@@ -4,9 +4,9 @@ require 'sass'
 require 'sinatra/flash'
 require 'pony'
 require './sinatra/auth'
-require './asset-handler'
 require 'v8'
 require 'coffee-script'
+require_relative 'asset-handler'
 #require 'sinatra/reloader' if development?
 
 class Website < Sinatra::Base
