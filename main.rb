@@ -32,9 +32,6 @@ configure :development do
 end
 
 configure :production do
-	DataMapper.setup(:default, ENV['DATABASE_URL'])
-  DataMapper.auto_upgrade!
-
 	set :email_address => 'smtp.sendgrid.net',
 		:email_user_name => ENV['SENDGRID_USERNAME'],
 		:email_password => ENV['SENDGRID_PASSWORD'],
