@@ -7,12 +7,13 @@ require './sinatra/auth'
 require 'v8'
 require 'coffee-script'
 require_relative 'asset-handler'
-#require 'sinatra/reloader' if development?
+require 'sinatra/reloader'
 
 class Website < Sinatra::Base
   use AssetHandler
   register Sinatra::Auth
   register Sinatra::Flash
+  register Sinatra::Reloader
 
 configure do
 	enable :sessions
@@ -42,13 +43,14 @@ before do
 	set_title
 end
 
-
+  #looping stlesheets called in templates...
 def css(*stylesheets)
 	stylesheets.map do |styleheet|
 		"<link href=\"/#{styleheet}.css\" media=\"screen, projection\" rel=\"stylesheet\" />"
 	end.join
 end
 
+#adding optional trailing slash for nav highlighting with current class...
 def current?(path='/')
 	(request.path==path || request.path==path+'/') ? "current" :nil
 end
@@ -77,8 +79,7 @@ def send_message
 		)
 end
 
-#get('/styles.css'){ scss :styles }
-#get('/javascripts/application.js'){ coffee :application }
+
 
 
 

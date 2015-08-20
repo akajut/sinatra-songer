@@ -3,9 +3,10 @@ require 'dm-core'
 require 'dm-migrations'
 require 'slim'
 require 'sass'
-require 'sinatra/flash'
-require './sinatra/auth'
+require 'sinatra/flash'     #adding feedback messages passed between pages...
+require './sinatra/auth'    #requiring log in for routes with "protected!"
 
+#data model for songs in the db...
 class Song
   include DataMapper::Resource
   property :id, Serial
@@ -15,6 +16,7 @@ class Song
   property :released_on, Date
   property :likes, Integer, :default => 0
 
+  #converting the date from a string to proper date...
 	def released_on=date
 		super Date.strptime(date, '%m/%d/%Y')
 	end
@@ -33,7 +35,6 @@ module SongHelpers
 
 	def create_song
 		@song = Song.create(params[:song])
-		#return Song.id
 	end
 end
 
@@ -45,7 +46,7 @@ class SongController < Sinatra::Base
 
   helpers SongHelpers
 
-
+  #setting password for editing...
   configure do
   	enable :sessions
   	set :username, 'frank'
@@ -63,18 +64,19 @@ class SongController < Sinatra::Base
     DataMapper.auto_upgrade!
   end
 
-
+  #setting page title before code runs...
   before do
 	  set_title
   end
 
-
+  #looping stylesheets called in layout template...
   def css(*stylesheets)
 	  stylesheets.map do |styleheet|
 	  	"<link href=\"/#{styleheet}.css\" media=\"screen, projection\" rel=\"stylesheet\" />"
   	end.join
   end
 
+#adding optional trailing slash for nav highlighting with current class...
   def current?(path='/')
   	(request.path==path || request.path==path+'/') ? "current" :nil
   end
@@ -109,7 +111,6 @@ class SongController < Sinatra::Base
 
   post '/' do
   	protected!
-    #create_song #refactoring...
   	if create_song
 	  	flash[:notice] = "Song successfully added"
   	end
@@ -137,7 +138,7 @@ class SongController < Sinatra::Base
   	@song = find_song
     @song.likes = @song.likes.next
     @song.save
-    redirect to"/#{@song.id}" unless request.xhr?
+    redirect to"/#{@song.id}" unless request.xhr? #skipping redirect if using Ajax...
     slim :like, :layout => false
   end
 end

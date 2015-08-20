@@ -1,4 +1,5 @@
 class AssetHandler < Sinatra::Base
+  #cofiguring assets directories for app...
   configure do
     set  :views, File.dirname(__FILE__) + '/assets'
     set  :jsdir, 'js'
@@ -6,7 +7,7 @@ class AssetHandler < Sinatra::Base
     enable  :coffeescript
     set  :cssengine, 'scss'
   end
-
+  #caching for coffeescript...
   get '/javascripts/*.js' do
     pass unless settings.coffeescript?
     last_modified File.mtime(settings.root+'/assets/'+settings.jsdir)
@@ -14,6 +15,7 @@ class AssetHandler < Sinatra::Base
     coffee (settings.jsdir + '/' + params[:splat].first).to_sym
   end
 
+  #caching for css...
   get '/*.css' do
     last_modified File.mtime(settings.root + '/assets/' + settings.cssdir)
     cache_control :public, :must_revalidate
